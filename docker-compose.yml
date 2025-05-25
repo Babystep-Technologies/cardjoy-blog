@@ -1,0 +1,22 @@
+services:
+  blog:
+    build: .
+    volumes:
+      - .:/app/blog
+        # One-way volume to use node_modules from inside image
+      - /app/node_modules
+    ports:
+      - "3003:3003"
+    environment:
+      - NODE_ENV=development
+    # depends_on:
+    #   - api
+    networks:
+      - cardjoy-blog-network-local
+    command: tail -f /dev/null
+    # this is needed for having react server available
+    stdin_open: true
+
+networks:
+  cardjoy-blog-network-local:
+    name: cardjoy_blog_network_local
