@@ -14,5 +14,5 @@ COPY . .
 EXPOSE 3003
 
 # Default command for development
-CMD ["npm", "run", "dev"]
+CMD ["node"]
 
