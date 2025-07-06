@@ -2,20 +2,19 @@ services:
   blog:
     build: .
     volumes:
-      - .:/app/blog
-        # One-way volume to use node_modules from inside image
+      - .:/app
+      # Exclude node_modules to use the container's version
       - /app/node_modules
     ports:
       - "3003:3003"
     environment:
       - NODE_ENV=development
-    # depends_on:
-    #   - api
     networks:
       - cardjoy-blog-network-local
-    command: tail -f /dev/null
-    # this is needed for having react server available
+    # Remove the tail command since Dockerfile now runs yarn dev
+    # this is needed for having astro server available
     stdin_open: true
+    tty: true
 
 networks:
   cardjoy-blog-network-local:

@@ -7,5 +7,9 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
 	site: 'https://blog.cardjoy.app',
   outDir: './dist',
+	server: {
+		port: 3003,
+		host: '0.0.0.0'
+	},
 	integrations: [mdx(), sitemap()],
 });
