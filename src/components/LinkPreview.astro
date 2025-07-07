@@ -1,0 +1,182 @@
+---
+export interface Props {
+	url: string;
+	title?: string;
+	description?: string;
+	image?: string;
+}
+
+const { url, title, description, image } = Astro.props;
+
+// Function to fetch OG tags from the URL
+async function fetchOGTags(url: string) {
+	try {
+		const response = await fetch(url);
+		const html = await response.text();
+		
+		// Helper function to decode HTML entities
+		function decodeHTMLEntities(text: string): string {
+			const entities: { [key: string]: string } = {
+				'&amp;': '&',
+				'&lt;': '<',
+				'&gt;': '>',
+				'&quot;': '"',
+				'&#39;': "'",
+				'&apos;': "'",
+				'&nbsp;': ' ',
+				'&mdash;': '—',
+				'&ndash;': '–',
+				'&hellip;': '…',
+				'&ldquo;': '"',
+				'&rdquo;': '"',
+				'&bull;': '•',
+				'&copy;': '©',
+				'&reg;': '®',
+				'&trade;': '™'
+			};
+			
+			return text.replace(/&[a-zA-Z0-9#]+;/g, (match) => entities[match] || match)
+						.replace(/&#(\d+);/g, (match, dec) => String.fromCharCode(parseInt(dec, 10)))
+						.replace(/&#x([a-fA-F0-9]+);/g, (match, hex) => String.fromCharCode(parseInt(hex, 16)));
+		}
+		
+		// Extract OG tags using improved regex patterns
+		const ogTitleMatch = html.match(/<meta[^>]*property=["']og:title["'][^>]*content=["']([^"']*)["'][^>]*>/i) ||
+						   html.match(/<meta[^>]*content=["']([^"']*)["'][^>]*property=["']og:title["'][^>]*>/i);
+		const ogTitle = ogTitleMatch ? decodeHTMLEntities(ogTitleMatch[1]) : '';
+		
+		const titleMatch = html.match(/<title[^>]*>([^<]*)<\/title>/i);
+		const fallbackTitle = titleMatch ? decodeHTMLEntities(titleMatch[1]) : '';
+		
+		const ogDescMatch = html.match(/<meta[^>]*property=["']og:description["'][^>]*content=["']([^"']*)["'][^>]*>/i) ||
+						   html.match(/<meta[^>]*content=["']([^"']*)["'][^>]*property=["']og:description["'][^>]*>/i);
+		const ogDescription = ogDescMatch ? decodeHTMLEntities(ogDescMatch[1]) : '';
+		
+		const descMatch = html.match(/<meta[^>]*name=["']description["'][^>]*content=["']([^"']*)["'][^>]*>/i) ||
+					     html.match(/<meta[^>]*content=["']([^"']*)["'][^>]*name=["']description["'][^>]*>/i);
+		const fallbackDescription = descMatch ? decodeHTMLEntities(descMatch[1]) : '';
+		
+		const ogImageMatch = html.match(/<meta[^>]*property=["']og:image["'][^>]*content=["']([^"']*)["'][^>]*>/i) ||
+						    html.match(/<meta[^>]*content=["']([^"']*)["'][^>]*property=["']og:image["'][^>]*>/i);
+		const ogImage = ogImageMatch ? ogImageMatch[1] : '';
+		
+		return {
+			title: ogTitle || fallbackTitle,
+			description: ogDescription || fallbackDescription,
+			image: ogImage
+		};
+	} catch (error) {
+		console.error('Error fetching OG tags:', error);
+		return { title: '', description: '', image: '' };
+	}
+}
+
+// Fetch OG tags if not provided in props
+const ogData = await fetchOGTags(url);
+
+// Use provided props or fallback to fetched OG data
+const linkTitle = title || ogData.title || 'Link Preview';
+const linkDescription = description || ogData.description || 'Click to view the link';
+const linkImage = image || ogData.image || null;
+---
+
+<div class="link-preview">
+	<a href={url} target="_blank" rel="noopener noreferrer" class="link-preview-card">
+		{linkImage && (
+			<div class="link-preview-image">
+				<img src={linkImage} alt={linkTitle} />
+			</div>
+		)}
+		<div class="link-preview-content">
+			<h3 class="link-preview-title">{linkTitle}</h3>
+			<p class="link-preview-description">{linkDescription}</p>
+			<span class="link-preview-url">{new URL(url).hostname}</span>
+		</div>
+	</a>
+</div>
+
+<style>
+	.link-preview {
+		margin: 1.5rem auto;
+		max-width: 600px;
+		display: flex;
+		justify-content: center;
+	}
+
+	.link-preview-card {
+		display: flex;
+		border: 1px solid rgb(var(--gray-light));
+		border-radius: 8px;
+		overflow: hidden;
+		text-decoration: none;
+		color: inherit;
+		transition: all 0.2s ease;
+		background: white;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
+
+	.link-preview-card:hover {
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+		transform: translateY(-2px);
+	}
+
+	.link-preview-image {
+		width: 150px;
+		height: 120px;
+		flex-shrink: 0;
+		overflow: hidden;
+		padding: 8px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: rgb(var(--gray-light));
+	}
+
+	.link-preview-image img {
+		width: calc(100% - 16px);
+		height: calc(100% - 16px);
+		object-fit: cover;
+		border-radius: 4px;
+	}
+
+	.link-preview-content {
+		padding: 1rem;
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+	}
+
+	.link-preview-title {
+		margin: 0 0 0.5rem 0;
+		font-size: 1.1rem;
+		font-weight: 600;
+		line-height: 1.3;
+		color: rgb(var(--black));
+	}
+
+	.link-preview-description {
+		margin: 0 0 0.5rem 0;
+		font-size: 0.9rem;
+		color: rgb(var(--gray));
+		line-height: 1.4;
+		flex: 1;
+	}
+
+	.link-preview-url {
+		font-size: 0.8rem;
+		color: rgb(var(--gray));
+		text-transform: lowercase;
+	}
+
+	@media (max-width: 480px) {
+		.link-preview-card {
+			flex-direction: column;
+		}
+
+		.link-preview-image {
+			width: 100%;
+			height: 200px;
+		}
+	}
+</style>
