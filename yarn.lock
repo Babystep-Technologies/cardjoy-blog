@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@astro-community/astro-embed-baseline-status@^0.1.0":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@astro-community/astro-embed-baseline-status/-/astro-embed-baseline-status-0.1.2.tgz#dac405d72c1637108122ed6c623babfa2a9daa22"
-  integrity sha512-u+3BwXCSjBIVW29MGTbdusRhRBhqcjHyE6dgBCsUK/nZ0BohP1Nfih8dB7YltTVZxgECakKWQWoSHabDbYteyA==
+"@astro-community/astro-embed-baseline-status@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@astro-community/astro-embed-baseline-status/-/astro-embed-baseline-status-0.2.0.tgz#9d2d6f7e5f91929d731ed5cd6ecfb13652c92845"
+  integrity sha512-OtMNgMLW6Rs32WfUXyoa2Im7QB0orH1g6KD3a6Kq+08XnPtIHJEkcGtlNylYf4jUm5S8uTPloVWP3WS1U/o/OQ==
   dependencies:
     "@astro-community/astro-embed-utils" "^0.1.0"
 
@@ -872,12 +872,12 @@ astro-auto-import@^0.4.2:
     "@types/node" "^18.0.0"
     acorn "^8.8.0"
 
-astro-embed@^0.9.0:
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/astro-embed/-/astro-embed-0.9.0.tgz#a81a35fec194d07d45960fe320fd5bd41020686f"
-  integrity sha512-koBCZH8n1q7tyXW+s11mdwb5dFsv9kG8uMuF17CUIVFJWqwRxx7YCpa9o2P9PuPeWffsrwmdVJTl65kLLP2Uug==
+astro-embed@^0.9.1:
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/astro-embed/-/astro-embed-0.9.1.tgz#d5ab468f43bf8eec8f35f4c89be5f111e00209b5"
+  integrity sha512-l3lkPsluDOf/FeHWfBU1+7srAcHrByu/Z1dSr3iAheSVYJfSBpAmYnSsHG90NuIK/8Mr3tg0AhNE2JJy3an/zA==
   dependencies:
-    "@astro-community/astro-embed-baseline-status" "^0.1.0"
+    "@astro-community/astro-embed-baseline-status" "^0.2.0"
     "@astro-community/astro-embed-bluesky" "^0.1.0"
     "@astro-community/astro-embed-integration" "^0.8.0"
     "@astro-community/astro-embed-link-preview" "^0.2.2"
