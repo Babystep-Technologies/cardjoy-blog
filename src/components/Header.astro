@@ -5,7 +5,7 @@ import { SITE_TITLE } from '../consts';
 
 <header>
 	<nav>
-		<h2><a href="/">{SITE_TITLE}</a></h2>
+		<h2><a href="/"><img src="/logo.png" alt="cardjoy logo" class="logo" />{SITE_TITLE}</a></h2>
 	</nav>
 </header>
 <style>
@@ -22,7 +22,15 @@ import { SITE_TITLE } from '../consts';
 
 	h2 a,
 	h2 a.active {
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
 		text-decoration: none;
+	}
+	.logo {
+		width: 1.75em;
+		height: 1.75em;
+		border-radius: 22%;
 	}
 	nav {
 		display: flex;
