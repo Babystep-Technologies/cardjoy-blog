@@ -29,15 +29,52 @@ const { title, description, pubDate, updatedDate, heroImage, heroLink, heroVideo
 				border-radius: 12px;
 				box-shadow: var(--box-shadow);
 			}
-			.hero-image .hero-video {
-					display: block;
+			.hero-image .hero-video-wrap {
+					position: relative;
 					width: 100%;
 					max-width: 1020px;
 					margin: 0 auto;
+					cursor: pointer;
+				}
+				.hero-image .hero-video {
+					display: block;
+					width: 100%;
 					border-radius: 12px;
 					box-shadow: var(--box-shadow);
-					cursor: pointer;
 					background: #000;
+				}
+				.hero-image .hero-play {
+					position: absolute;
+					top: 50%;
+					left: 50%;
+					transform: translate(-50%, -50%);
+					width: 88px;
+					height: 88px;
+					padding: 0;
+					border: none;
+					background: none;
+					cursor: pointer;
+					color: #fff;
+					transition: transform 0.15s ease, opacity 0.2s ease;
+				}
+				.hero-image .hero-play svg {
+					width: 100%;
+					height: 100%;
+					display: block;
+					filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.35));
+				}
+				.hero-image .hero-play svg circle {
+					fill: rgba(0, 0, 0, 0.55);
+				}
+				.hero-image .hero-play svg path {
+					fill: #fff;
+				}
+				.hero-image .hero-video-wrap:hover .hero-play {
+					transform: translate(-50%, -50%) scale(1.08);
+				}
+				.hero-image .hero-video-wrap.playing .hero-play {
+					opacity: 0;
+					pointer-events: none;
 				}
 				.hero-image .hero-link {
 				display: block;
@@ -108,15 +145,22 @@ const { title, description, pubDate, updatedDate, heroImage, heroLink, heroVideo
 			<article>
 				<div class="hero-image">
 					{heroVideo ? (
-						<video
-							class="hero-video"
-							src={heroVideo}
-							poster={heroImage}
-							controls
-							playsinline
-							preload="none"
-							aria-label={`Watch: ${title}`}
-						></video>
+						<div class="hero-video-wrap">
+							<video
+								class="hero-video"
+								src={heroVideo}
+								poster={heroImage}
+								playsinline
+								preload="none"
+								aria-label={`Watch: ${title}`}
+							></video>
+							<button class="hero-play" type="button" aria-label={`Play: ${title}`}>
+								<svg viewBox="0 0 68 68" aria-hidden="true" focusable="false">
+									<circle cx="34" cy="34" r="34" />
+									<path d="M27 22l22 12-22 12z" />
+								</svg>
+							</button>
+						</div>
 					) : heroImage ? (
 						heroLink ? (
 							<a class="hero-link" href={heroLink} target="_blank" rel="noopener" aria-label={`Watch: ${title}`}>
@@ -152,15 +196,19 @@ const { title, description, pubDate, updatedDate, heroImage, heroLink, heroVideo
 		</main>
 		<Footer />
 		<script>
-			// Let a click anywhere on the hero poster start playback (not just the
-			// default play button), so the hero image itself plays the demo inline.
-			document.querySelectorAll<HTMLVideoElement>('video.hero-video').forEach((video) => {
-				video.addEventListener('click', (event) => {
-					if (video.paused) {
-						video.play();
-						event.preventDefault();
-					}
-				});
+			// A click anywhere on the hero poster (or the branded play icon) starts
+			// playback, hides the overlay, and hands off to native controls. After
+			// that first click the handler detaches so native controls behave normally.
+			document.querySelectorAll<HTMLDivElement>('.hero-video-wrap').forEach((wrap) => {
+				const video = wrap.querySelector<HTMLVideoElement>('video.hero-video');
+				if (!video) return;
+				const start = () => {
+					wrap.classList.add('playing');
+					video.controls = true;
+					video.play();
+					wrap.removeEventListener('click', start);
+				};
+				wrap.addEventListener('click', start);
 			});
 		</script>
 	</body>
