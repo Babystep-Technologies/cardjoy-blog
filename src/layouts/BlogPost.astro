@@ -8,7 +8,7 @@ import { coverHue } from '../utils/coverColor';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate, heroImage, heroLink } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, heroLink, heroVideo } = Astro.props;
 ---
 
 <html lang="en">
@@ -29,7 +29,17 @@ const { title, description, pubDate, updatedDate, heroImage, heroLink } = Astro.
 				border-radius: 12px;
 				box-shadow: var(--box-shadow);
 			}
-			.hero-image .hero-link {
+			.hero-image .hero-video {
+					display: block;
+					width: 100%;
+					max-width: 1020px;
+					margin: 0 auto;
+					border-radius: 12px;
+					box-shadow: var(--box-shadow);
+					cursor: pointer;
+					background: #000;
+				}
+				.hero-image .hero-link {
 				display: block;
 				cursor: pointer;
 			}
@@ -97,7 +107,17 @@ const { title, description, pubDate, updatedDate, heroImage, heroLink } = Astro.
 		<main>
 			<article>
 				<div class="hero-image">
-					{heroImage ? (
+					{heroVideo ? (
+						<video
+							class="hero-video"
+							src={heroVideo}
+							poster={heroImage}
+							controls
+							playsinline
+							preload="none"
+							aria-label={`Watch: ${title}`}
+						></video>
+					) : heroImage ? (
 						heroLink ? (
 							<a class="hero-link" href={heroLink} target="_blank" rel="noopener" aria-label={`Watch: ${title}`}>
 								<img width={1020} height={510} src={heroImage} alt="" />
@@ -131,5 +151,17 @@ const { title, description, pubDate, updatedDate, heroImage, heroLink } = Astro.
 			</article>
 		</main>
 		<Footer />
+		<script>
+			// Let a click anywhere on the hero poster start playback (not just the
+			// default play button), so the hero image itself plays the demo inline.
+			document.querySelectorAll<HTMLVideoElement>('video.hero-video').forEach((video) => {
+				video.addEventListener('click', (event) => {
+					if (video.paused) {
+						video.play();
+						event.preventDefault();
+					}
+				});
+			});
+		</script>
 	</body>
 </html>
