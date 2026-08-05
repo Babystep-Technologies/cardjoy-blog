@@ -3,6 +3,11 @@ name: Deploy to Github Pages
 on:
   push:
     branches: [main]
+  # Rebuild daily so posts with a future pubDate go live on their date
+  # without needing a push. 13:00 UTC is early morning in the US.
+  schedule:
+    - cron: '0 13 * * *'
+  workflow_dispatch:
 
 permissions:
   contents: write
