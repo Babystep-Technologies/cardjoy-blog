@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   deploy:
-    name: Build & Deploy CardJoy Blog
+    name: Build & Deploy Felicito Blog
     runs-on: ubuntu-latest
 
     steps:
@@ -38,4 +38,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
           publish_branch: gh-pages
-          cname: blog.cardjoy.app
+          cname: blog.felicito.app

@@ -1,11 +1,11 @@
 ---
-import HeaderLink from './HeaderLink.astro';
+import Wordmark from './Wordmark.astro';
 import { SITE_TITLE } from '../consts';
 ---
 
 <header>
 	<nav>
-		<h2><a href="/"><img src="/logo.png" alt="cardjoy logo" class="logo" />{SITE_TITLE}</a></h2>
+		<h2><a href="/"><Wordmark /><span class="blog-label" aria-hidden="true">blog</span><span class="sr-only">{SITE_TITLE}</span></a></h2>
 	</nav>
 </header>
 <style>
@@ -27,10 +27,10 @@ import { SITE_TITLE } from '../consts';
 		gap: 0.5em;
 		text-decoration: none;
 	}
-	.logo {
-		width: 1.75em;
-		height: 1.75em;
-		border-radius: 22%;
+	.blog-label {
+		color: var(--black);
+		align-self: flex-end;
+		line-height: 1.2;
 	}
 	nav {
 		display: flex;
