@@ -11,8 +11,7 @@ services:
       - NODE_ENV=development
     networks:
       - felicito-blog-network-local
-    # Remove the tail command since Dockerfile now runs yarn dev
-    # this is needed for having astro server available
+    # The image's CMD runs `yarn dev`, which serves the blog on :3003.
     stdin_open: true
     tty: true
 

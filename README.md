@@ -21,6 +21,16 @@ Features:
 - ✅ RSS Feed support
 - ✅ Markdown & MDX support
 
+## Local development (Docker)
+
+```bash
+docker compose up --build   # blog on http://localhost:3003
+docker compose down
+```
+
+The image installs from `yarn.lock` (same as CI) on Node 20. To run without Docker use Node >= 20 and
+`yarn install && yarn dev` (also on port 3003).
+
 ## 🚀 Project Structure
 
 Inside of your Astro project, you'll see the following folders and files:
