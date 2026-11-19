@@ -10,12 +10,12 @@ services:
     environment:
       - NODE_ENV=development
     networks:
-      - cardjoy-blog-network-local
+      - felicito-blog-network-local
     # Remove the tail command since Dockerfile now runs yarn dev
     # this is needed for having astro server available
     stdin_open: true
     tty: true
 
 networks:
-  cardjoy-blog-network-local:
-    name: cardjoy_blog_network_local
+  felicito-blog-network-local:
+    name: felicito_blog_network_local
